@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"net/url"
 	"regexp"
 	"sort"
 	"strconv"
@@ -276,6 +277,14 @@ func findHTMLTagPos(tag []byte, tagname string) (bool, int) {
 }
 
 func isRelativeLink(link []byte) (yes bool) {
+	url, err := url.Parse(string(link))
+	if err == nil {
+		return !url.IsAbs()
+	}
+	return false
+}
+
+func isRelativeLinkOrig(link []byte) (yes bool) {
 	// a tag begin with '#'
 	if link[0] == '#' {
 		return true
